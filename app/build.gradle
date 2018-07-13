@@ -1,0 +1,38 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.hjf.test"
+        minSdkVersion 19
+        targetSdkVersion 21
+        versionCode 100
+        versionName "1.4.8"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
+//    hjf 的依赖库
+    implementation project(':out-lib-logx:liblogx')
+    implementation project(':out-lib-thread:libthreadutil')
+    implementation project(':out-lib-util:libutil')
+    implementation project(':out-lib-view:libcusview')
+
+    compile 'io.netty:netty-all:4.1.23.Final'
+
+}

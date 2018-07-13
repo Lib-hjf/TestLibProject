@@ -1,0 +1,19 @@
+include ':app'
+
+
+// 导入外部依赖：util
+include ':out-lib-util'
+project (':out-lib-util').projectDir = new File('../LibUtil')
+include ':out-lib-util:libutil'
+// 导入外部依赖：log util
+include ':out-lib-logx'
+project (':out-lib-logx').projectDir = new File('../LibLogX')
+include ':out-lib-logx:liblogx'
+// 导入外部依赖：thread util
+include ':out-lib-thread'
+project (':out-lib-thread').projectDir = new File('../LibThreadUtil')
+include ':out-lib-thread:libthreadutil'
+// 导入外部依赖：cus view
+include ':out-lib-view'
+project (':out-lib-view').projectDir = new File('../LibCusView')
+include ':out-lib-view:libcusview'
