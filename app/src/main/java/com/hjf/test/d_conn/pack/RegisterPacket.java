@@ -1,9 +1,9 @@
-package com.hjf.test.conn.pack;
+package com.hjf.test.d_conn.pack;
 
 import android.content.Context;
 
 import com.hjf.test.R;
-import com.hjf.test.Util.AppEnvUtil;
+import com.hjf.test.util.AppEnvUtil;
 
 import org.hjf.liblogx.LogUtil;
 import org.hjf.util.EnvironUtils;
@@ -23,14 +23,13 @@ public class RegisterPacket extends BasicPacket {
     private String phoneModel = android.os.Build.MODEL;
     private String netType;
 
-    public RegisterPacket(Context context) {
-        super.packetType = (byte) 0x02;
-        // TODO
-        ip = NetworkUtils.getIpAddress(context);
-        appID = Integer.parseInt(context.getString(R.string.app_id));
-        netType = String.valueOf(NetworkUtils.getNetWorkType(context));
-        appVersionName = EnvironUtils.getAppVersionName(context);
-        channelID = AppEnvUtil.getChannelId(context, "");
+    public RegisterPacket(Context context, String ip) {
+        super.packetType = PacketType.MOBILE_REGISTER_REQ;
+        this.ip = ip;
+        this.appID = Integer.parseInt(context.getString(R.string.app_id));
+        this.netType = String.valueOf(NetworkUtils.getNetWorkType(context));
+        this.appVersionName = EnvironUtils.getAppVersionName(context);
+        this.channelID = AppEnvUtil.getChannelId(context, "");
     }
 
     @Override

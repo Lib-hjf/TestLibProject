@@ -1,5 +1,5 @@
 
-package com.hjf.test.conn.pack;
+package com.hjf.test.d_conn.pack;
 
 
 import org.hjf.liblogx.LogUtil;

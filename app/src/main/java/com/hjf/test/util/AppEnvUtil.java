@@ -1,4 +1,4 @@
-package com.hjf.test.Util;
+package com.hjf.test.util;
 
 import android.content.Context;
 import android.text.TextUtils;

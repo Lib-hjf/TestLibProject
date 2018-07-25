@@ -1,0 +1,101 @@
+package com.hjf.test.d_conn;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+
+import com.hjf.test.MyApp;
+import com.hjf.test.R;
+import com.hjf.test.d_conn.message.MessageType;
+import com.hjf.test.d_conn.pack.HeartbeatPacket;
+import com.hjf.test.d_conn.pack.RegisterPacket;
+import com.hjf.test.d_conn.server.ConnServiceByNio;
+import com.hjf.test.d_conn.server.PushDataDispatcher;
+import com.hjf.test.util.NotifyUtil;
+
+import org.hjf.activity.BaseActivity;
+import org.hjf.kaconnect.nio.NioClient;
+import org.hjf.liblogx.LogUtil;
+import org.hjf.util.MD5Util;
+import org.json.JSONObject;
+
+import java.nio.ByteBuffer;
+
+/**
+ * An example full-screen activity that shows and hides the system UI (i.e.
+ * status bar and navigation/system bar) with user interaction.
+ */
+public class DemoConnActivity extends BaseActivity implements View.OnClickListener {
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, DemoConnActivity.class);
+        context.startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.a_demo_conn_nio);
+
+        // 登录包处理
+        PushDataDispatcher.getInstance().registerListener(MessageType.MOBILE_REGISTER_RESP, new PushDataDispatcher.OnReceiveListener() {
+            @Override
+            public void onReceive(JSONObject jsonObject) {
+                String s = jsonObject.toString();
+                NotifyUtil.toast(s);
+            }
+        });
+        // 心跳包处理
+        PushDataDispatcher.getInstance().registerListener(MessageType.HEART_BEAT_RESP, new PushDataDispatcher.OnReceiveListener() {
+            @Override
+            public void onReceive(JSONObject jsonObject) {
+                NotifyUtil.toast("收到心跳回应包");
+            }
+        });
+
+
+        // 开启长连接任务
+        startService(new Intent(this, ConnServiceByNio.class));
+    }
+
+    @Override
+    public void onContentChanged() {
+        findViewById(R.id.btn_send_login_packet).setOnClickListener(this);
+        findViewById(R.id.btn_send_heart_packet).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_send_login_packet:
+                sendRegisterPack();
+                break;
+            case R.id.btn_send_heart_packet:
+                sendHeartThread();
+                break;
+        }
+    }
+
+
+    /**
+     * 发送注册/登录包
+     */
+    private void sendRegisterPack() {
+        LogUtil.d("发送登录数据包");
+        RegisterPacket registerPacket = new RegisterPacket(MyApp.getContent(), NioClient.getInstance().getLocalIpAddress());
+        registerPacket.setUserMobile("2256423");
+        registerPacket.setPassword(MD5Util.getMd5Pwd("2256423"));
+        NioClient.getInstance().pushData(ByteBuffer.wrap(registerPacket.toBytes()));
+    }
+
+    /**
+     * 发送给心跳包
+     */
+    private void sendHeartThread() {
+        HeartbeatPacket heartbeatPacket = new HeartbeatPacket();
+        NioClient.getInstance().pushData(ByteBuffer.wrap(heartbeatPacket.toBytes()));
+    }
+
+}

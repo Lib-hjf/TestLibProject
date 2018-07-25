@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="140dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/red"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:text="删除"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_main_big"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_collect"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_height="50dp" />
+
+    <TextView
+        android:id="@+id/tv_collect"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/blue"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:text="收藏"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_main_big"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_height="50dp" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.hjf.test.conn.pack;
+package com.hjf.test.d_conn.pack;
 
 
 import android.text.TextUtils;
@@ -6,24 +6,19 @@ import android.text.TextUtils;
 import java.io.UnsupportedEncodingException;
 
 /**
- * 基本数据包
+ * 基本数据包，用于App本地和Cloud服务器端数据传递和解析
+ * TODO 直接将byte当int使用可以吗
  */
 public class BasicPacket {
 
     private static final String CHARSET = "utf-8";
-    private static final String UNKNOWN_MESSAGE_TYPE = "Unknown_Message_type";
 
     private byte packetHead = (byte) 0xfa; // 包头固定
-
-    protected byte packetType = PacketType.UNKNOWN_PACKET_TYPE; // 类型，默认0x00，表示不明包体数据
+    protected byte packetType = (byte) 0x00; // 类型，默认0x00，表示不明包体数据
     private int packetSeq;  // 序列号
     private byte packetRet = (byte) 0x00;
     private byte packetVersion = (byte) 0x01; // 版本号
 
-    /**
-     * 包体携带的内容信息类型
-     */
-    private String msgTypeStr = UNKNOWN_MESSAGE_TYPE;
     protected String contentStr = "";
 
     BasicPacket() {
@@ -101,7 +96,6 @@ public class BasicPacket {
         try {
             // 检查 head
             packetType = bytes[2];
-            msgTypeStr = PacketUtil.getMsgType(packetType);
 
             byte[] seqByte = new byte[4];
             System.arraycopy(bytes, 3, seqByte, 0, 4);
@@ -126,9 +120,8 @@ public class BasicPacket {
         return this;
     }
 
-
-    public String getMsgTypeStr() {
-        return msgTypeStr;
+    public byte getPacketType() {
+        return this.packetType;
     }
 
     public String getContentStr() {

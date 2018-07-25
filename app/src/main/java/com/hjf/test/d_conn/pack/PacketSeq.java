@@ -1,4 +1,4 @@
-package com.hjf.test.conn.pack;
+package com.hjf.test.d_conn.pack;
 
 public class PacketSeq {
 
