@@ -1,24 +1,17 @@
 package com.hjf;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import org.hjf.util.EnvironUtils;
 import org.hjf.util.log.LogMgr;
 
 
-public class MyApp extends MultiDexApplication {
+public class MyApp extends Application {
 
     private static MyApp myApp;
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-//        MultiDex.install(this);
-    }
 
     @Override
     public void onCreate() {
