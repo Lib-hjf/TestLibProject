@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".MyApp"
+        android:name="com.hjf.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,10 +16,10 @@
         android:theme="@style/AppTheme">
 
         <!-- Service -->
-        <service android:name=".d_conn.server.ConnServiceByNio" />
+        <service android:name=".t_conn.server.ConnServiceByNio" />
 
         <!-- Activity -->
-        <activity android:name=".MainActivity">
+        <activity android:name="com.hjf.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,11 +27,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".d_view.DemoViewActivity"
+            android:name=".t_view.DemoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_demo_view" />
         <activity
-            android:name=".d_conn.DemoConnActivity"
+            android:name=".t_conn.DemoConnActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_demo_conn" />
     </application>
