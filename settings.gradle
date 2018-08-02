@@ -1,4 +1,4 @@
-include ':app'
+include ':app', ':plugin'
 
 
 // 导入外部依赖：util

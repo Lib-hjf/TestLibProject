@@ -17,7 +17,7 @@ import com.hjf.util.NotifyUtil;
 
 import org.hjf.activity.BaseActivity;
 import org.hjf.kaconnect.nio.NioClient;
-import org.hjf.util.log.LogUtil;
+import org.hjf.log.LogUtil;
 import org.hjf.util.MD5Util;
 import org.json.JSONObject;
 

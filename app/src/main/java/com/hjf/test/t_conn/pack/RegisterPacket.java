@@ -5,7 +5,7 @@ import android.content.Context;
 import com.hjf.test.R;
 import com.hjf.util.AppEnvUtil;
 
-import org.hjf.util.log.LogUtil;
+import org.hjf.log.LogUtil;
 import org.hjf.util.EnvironUtils;
 import org.hjf.util.NetworkUtils;
 import org.json.JSONObject;

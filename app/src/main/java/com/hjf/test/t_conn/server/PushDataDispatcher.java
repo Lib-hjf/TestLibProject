@@ -6,7 +6,7 @@ import com.hjf.test.t_conn.message.MessageUtil;
 import com.hjf.test.t_conn.pack.BasicPacket;
 
 import org.hjf.kaconnect.OnReceiveDataListener;
-import org.hjf.util.log.LogUtil;
+import org.hjf.log.LogUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 

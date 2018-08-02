@@ -1,12 +1,15 @@
 package com.hjf.test.t_func;
 
+import android.Manifest;
 import android.view.View;
 
 import com.hjf.test.R;
 import com.hjf.util.NotifyUtil;
 
 import org.hjf.activity.BaseFragment;
-import org.hjf.util.aop.SingleClick;
+import org.hjf.aop.LoginCheck;
+import org.hjf.aop.PermissionCheck;
+import org.hjf.aop.SingleClick;
 
 /**
  * WiFi自动切换
@@ -28,6 +31,8 @@ public class AOPDemoFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void bindView() {
         findViewById(R.id.btn_click).setOnClickListener(this);
+        findViewById(R.id.btn_login_check).setOnClickListener(this);
+        findViewById(R.id.btn_permission).setOnClickListener(this);
     }
 
     @Override
@@ -37,6 +42,24 @@ public class AOPDemoFragment extends BaseFragment implements View.OnClickListene
             case R.id.btn_click:
                 NotifyUtil.toast(++index + "- click");
                 break;
+            case R.id.btn_login_check:
+                loginStatus();
+                break;
+            case R.id.btn_permission:
+                permissionCheck();
+                break;
         }
     }
+
+    @PermissionCheck({Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE})
+    private void permissionCheck() {
+        NotifyUtil.toast("授权成功");
+    }
+
+    @LoginCheck
+    private void loginStatus() {
+        NotifyUtil.toast("用户已登录");
+    }
+
+
 }

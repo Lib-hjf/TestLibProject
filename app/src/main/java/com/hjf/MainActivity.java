@@ -1,5 +1,6 @@
 package com.hjf;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,9 +9,10 @@ import android.view.View;
 
 import com.hjf.test.R;
 import com.hjf.test.t_func.AOPDemoFragment;
-import com.hjf.test.t_view.RecyclerViewFragment;
 
 import org.hjf.activity.FragmentStackActivity;
+import org.hjf.aop.PermissionCheck;
+import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.ViewHolder;
 
@@ -26,6 +28,17 @@ public class MainActivity extends FragmentStackActivity {
         setContentView(R.layout.a_main);
 
         addContentFragment();
+
+        forLog2Disk();
+    }
+
+
+    /**
+     * 适配 6.0 log日志打印
+     */
+    @PermissionCheck({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    private void forLog2Disk() {
+        LogUtil.i("获取设备磁盘读写权限成功");
     }
 
     private void addContentFragment() {

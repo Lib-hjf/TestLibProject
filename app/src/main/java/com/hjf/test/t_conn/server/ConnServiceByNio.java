@@ -11,7 +11,7 @@ import com.hjf.test.t_conn.pack.RegisterPacket;
 
 import org.hjf.kaconnect.OnConnectStatusChangedListener;
 import org.hjf.kaconnect.nio.NioClient;
-import org.hjf.util.log.LogUtil;
+import org.hjf.log.LogUtil;
 import org.hjf.util.MD5Util;
 
 import java.nio.ByteBuffer;

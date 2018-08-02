@@ -1,4 +1,9 @@
+import com.app.plugin.AspectjPlugin
+import com.app.plugin.JavassistPlugin
+
 apply plugin: 'com.android.application'
+apply plugin: AspectjPlugin
+apply plugin: JavassistPlugin
 
 android {
     compileSdkVersion rootProject.compile_sdk_version as int
@@ -22,7 +27,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 //    testImplementation 'junit:junit:4.12'
 //    androidTestImplementation 'com.android.support.test:runner:1.0.2'
