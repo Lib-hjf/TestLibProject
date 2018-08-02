@@ -1,9 +1,7 @@
-import com.app.plugin.AspectjPlugin
-import com.app.plugin.JavassistPlugin
+import org.hjf.plugin.AspectjPlugin
 
 apply plugin: 'com.android.application'
 apply plugin: AspectjPlugin
-apply plugin: JavassistPlugin
 
 android {
     compileSdkVersion rootProject.compile_sdk_version as int
