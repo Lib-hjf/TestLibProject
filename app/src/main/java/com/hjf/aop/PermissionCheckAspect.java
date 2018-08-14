@@ -2,7 +2,6 @@ package com.hjf.aop;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -17,9 +16,8 @@ import com.hjf.MyApp;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.hjf.activity.BaseActivity;
-import org.hjf.aop.PermissionCheck;
+import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.log.LogUtil;
 
 import java.util.ArrayList;
@@ -31,12 +29,12 @@ public class PermissionCheckAspect {
     private static final int REQUEST_CODE_PERMISSION = 1021;
 
     // 在连接点进行方法替换
-    @Around("execution(@org.hjf.aop.PermissionCheck * *(..))  && @annotation(permission)")
+    @Around("execution(@org.hjf.annotation.aspect.PermissionCheck * *(..))  && @annotation(permission)")
     public void aroundJoinPoint(ProceedingJoinPoint joinPoint, PermissionCheck permission) throws Throwable {
 
         // 1. 判断当前手机API版本是否 >= 6.0
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            LogUtil.e("PermissionCheckAspect - Build.VERSION.SDK_INT = {0}", Build.VERSION.SDK_INT);
+            LogUtil.e("Build.VERSION.SDK_INT = {0}", Build.VERSION.SDK_INT);
             // 执行原方法
             joinPoint.proceed();
             return;
@@ -45,7 +43,7 @@ public class PermissionCheckAspect {
         // 2.1 过滤所有的权限申请，将目前没有的权限记录
         List<String> toPermissionList = new ArrayList<>();
         for (String permissionStr : permission.value()) {
-            if (ContextCompat.checkSelfPermission(MyApp.getContent(), permissionStr) == PackageManager.PERMISSION_DENIED) {
+            if (ContextCompat.checkSelfPermission(MyApp.getContext(), permissionStr) == PackageManager.PERMISSION_DENIED) {
                 toPermissionList.add(permissionStr);
             }
         }

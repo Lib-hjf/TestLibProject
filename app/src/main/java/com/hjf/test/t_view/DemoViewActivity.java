@@ -1,24 +1,25 @@
 package com.hjf.test.t_view;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.hjf.TRouter;
 import com.hjf.test.R;
+import com.hjf.util.NotifyUtil;
 
 import org.hjf.activity.FragmentStackActivity;
+import org.hjf.annotation.apt.Extra;
+import org.hjf.annotation.apt.Router;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
+@Router()
 public class DemoViewActivity extends FragmentStackActivity {
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, DemoViewActivity.class);
-        context.startActivity(intent);
-    }
+    @Extra("content")
+    public String info;
 
     @Override
     public int getFragmentContentId() {
@@ -29,6 +30,8 @@ public class DemoViewActivity extends FragmentStackActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_demo_view);
+        TRouter.bind(this);
+        NotifyUtil.toast(info);
         addFragmentInBackStack(ViewMainFragment.newInstance(), false);
     }
 

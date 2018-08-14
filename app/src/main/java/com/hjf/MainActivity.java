@@ -11,7 +11,7 @@ import com.hjf.test.R;
 import com.hjf.test.t_func.AOPDemoFragment;
 
 import org.hjf.activity.FragmentStackActivity;
-import org.hjf.aop.PermissionCheck;
+import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.ViewHolder;
@@ -30,6 +30,7 @@ public class MainActivity extends FragmentStackActivity {
         addContentFragment();
 
         forLog2Disk();
+        LogUtil.setMainThreadId(Thread.currentThread().getId());
     }
 
 
@@ -42,7 +43,7 @@ public class MainActivity extends FragmentStackActivity {
     }
 
     private void addContentFragment() {
-        final boolean open_debug_mode = true;
+        final boolean open_debug_mode = false;
         // 显示正常的主界面
         if (!open_debug_mode) {
             addFragmentInBackStack(MainFragment.newInstance(), false);

@@ -77,7 +77,7 @@ public class ConnServiceByNio extends Service {
      */
     private static void sendRegisterPack() {
         LogUtil.d("发送登录数据包");
-        RegisterPacket registerPacket = new RegisterPacket(MyApp.getContent(), NioClient.getInstance().getLocalIpAddress());
+        RegisterPacket registerPacket = new RegisterPacket(MyApp.getContext(), NioClient.getInstance().getLocalIpAddress());
         registerPacket.setUserMobile("2256423");
         registerPacket.setPassword(MD5Util.getMd5Pwd("2256423"));
         NioClient.getInstance().pushData(ByteBuffer.wrap(registerPacket.toBytes()));

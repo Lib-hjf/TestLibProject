@@ -7,9 +7,9 @@ import com.hjf.test.R;
 import com.hjf.util.NotifyUtil;
 
 import org.hjf.activity.BaseFragment;
-import org.hjf.aop.LoginCheck;
-import org.hjf.aop.PermissionCheck;
-import org.hjf.aop.SingleClick;
+import org.hjf.annotation.aspect.LoginCheck;
+import org.hjf.annotation.aspect.PermissionCheck;
+import org.hjf.annotation.aspect.SingleClick;
 
 /**
  * WiFi自动切换
@@ -51,7 +51,11 @@ public class AOPDemoFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    @PermissionCheck({Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE})
+    @PermissionCheck({
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_SMS
+    })
     private void permissionCheck() {
         NotifyUtil.toast("授权成功");
     }

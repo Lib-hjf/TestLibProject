@@ -9,6 +9,7 @@ import com.hjf.test.R;
 
 import org.hjf.activity.BaseFragment;
 import org.hjf.activity.FragmentStackActivity;
+import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.ViewHolder;
 
@@ -63,6 +64,9 @@ public class FuncMainFragment extends BaseFragment {
                     else if ("AOP Test".equals(data)) {
                         activity.addFragmentInBackStack(AOPDemoFragment.newInstance(), true);
                     }
+                    else if ("Log DB UI".equals(data)) {
+                        LogUtil.gotoDBView();
+                    }
                 }
             });
         }
@@ -71,6 +75,7 @@ public class FuncMainFragment extends BaseFragment {
     private List<String> getDatas() {
         List<String> strings = new ArrayList<>();
         strings.add("AOP Test");
+        strings.add("Log DB UI");
 //        strings.add("Wi-Fi Auto Switch");
         return strings;
     }

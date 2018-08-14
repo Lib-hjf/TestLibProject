@@ -1,6 +1,5 @@
 package com.hjf.test.t_conn;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +15,7 @@ import com.hjf.test.t_conn.server.PushDataDispatcher;
 import com.hjf.util.NotifyUtil;
 
 import org.hjf.activity.BaseActivity;
+import org.hjf.annotation.apt.Router;
 import org.hjf.kaconnect.nio.NioClient;
 import org.hjf.log.LogUtil;
 import org.hjf.util.MD5Util;
@@ -23,16 +23,8 @@ import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
+@Router()
 public class DemoConnActivity extends BaseActivity implements View.OnClickListener {
-
-    public static void start(Context context) {
-        Intent intent = new Intent(context, DemoConnActivity.class);
-        context.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +76,7 @@ public class DemoConnActivity extends BaseActivity implements View.OnClickListen
      */
     private void sendRegisterPack() {
         LogUtil.d("发送登录数据包");
-        RegisterPacket registerPacket = new RegisterPacket(MyApp.getContent(), NioClient.getInstance().getLocalIpAddress());
+        RegisterPacket registerPacket = new RegisterPacket(MyApp.getContext(), NioClient.getInstance().getLocalIpAddress());
         registerPacket.setUserMobile("2256423");
         registerPacket.setPassword(MD5Util.getMd5Pwd("2256423"));
         NioClient.getInstance().pushData(ByteBuffer.wrap(registerPacket.toBytes()));

@@ -12,6 +12,7 @@ import com.hjf.test.t_view.DemoViewActivity;
 
 import org.hjf.activity.BaseFragment;
 import org.hjf.activity.FragmentStackActivity;
+import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.ViewHolder;
 
@@ -62,14 +63,20 @@ public class MainFragment extends BaseFragment {
                 public void onClick(View v) {
                     // 自定义View Demo
                     if ("CusView Demo".equals(data)) {
-                        DemoViewActivity.start(mContextInAdapter);
+                        TRouter.addExtra("content", "Router Extra GET")
+                                .go(DemoViewActivity.class);
                     }
                     // 长连接 Demo
                     else if ("Connect Demo".equals(data)) {
-                        DemoConnActivity.start(mContextInAdapter);
+                        TRouter.go(DemoConnActivity.class);
                     }
                     // 功能类测试
                     else if ("Function Demo".equals(data)) {
+                        LogUtil.v("info");
+                        LogUtil.d("info");
+                        LogUtil.i("info");
+                        LogUtil.w("info");
+                        LogUtil.e("info");
                         ((FragmentStackActivity) mContextInAdapter).addFragmentInBackStack(FuncMainFragment.newInstance(), true);
                     }
                 }

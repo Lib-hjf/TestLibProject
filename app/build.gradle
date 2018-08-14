@@ -27,15 +27,20 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-//    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //    testImplementation 'junit:junit:4.12'
+    //    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    //    hjf 的依赖库
-    implementation project(':out-lib-thread:libthreadutil')
+    /* 项目依赖库 */
+    implementation project(':lib')
+
+    /* 练手依赖库 */
     implementation project(':out-lib-util:libutil')
+    implementation project(':out-lib-thread:libthreadutil')
     implementation project(':out-lib-view:libcusview')
     implementation project(':out-lib-push:libkaconnect')
 
-//    compile 'io.netty:netty-all:4.1.23.Final'
+    /* 注释编辑器，生成Java代码,适用于逻辑简单代码冗余繁琐文件，如：router等 */
+    annotationProcessor project(':apt')
+    //    compile 'io.netty:netty-all:4.1.23.Final'
 }

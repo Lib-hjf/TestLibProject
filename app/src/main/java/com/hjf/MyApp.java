@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
+import org.hjf.log.LogUtil;
 import org.hjf.util.EnvironUtils;
-import org.hjf.log.LogMgr;
 
 import java.util.Stack;
 
@@ -28,11 +28,11 @@ public class MyApp extends Application {
         // 打印日志工具设置
         String storageDir = Environment.getExternalStorageDirectory().toString();
         String logPath = storageDir + "/" + EnvironUtils.getApplicationID(getApplicationContext());
-        LogMgr.init(getApplicationContext(), logPath);
-        LogMgr.getInstance().openHJFDebug();
-        LogMgr.getInstance().openCrashLog();
-        LogMgr.getInstance().openDiskLog(Log.DEBUG);
-        LogMgr.getInstance().openLogcat(Log.DEBUG);
+        LogUtil.init(getApplicationContext());
+        LogUtil.openLogcat(Log.VERBOSE);
+        LogUtil.openDiskLog(logPath + "/log/", Log.VERBOSE);
+        LogUtil.openDatabaseLog(Log.VERBOSE);
+        LogUtil.openCrashLog(logPath + "/crash/");
         // 监听 Activity 创建和销毁，进行管理
         registerActivityLifecycleCallbacks(activityLifecycleListener);
     }
@@ -48,7 +48,7 @@ public class MyApp extends Application {
     /**
      * 获取全局上下文对象
      */
-    public static Context getContent() {
+    public static Context getContext() {
         return MyApp.myApp.getApplicationContext();
     }
 

@@ -15,7 +15,7 @@ public class LoginCheckAspect {
     private static final int CLICK_DELAY_TIME_MILLIS = 2000;
 
     // 方法切入点，使用正则表达式指定
-    @Pointcut("execution(@org.hjf.aop.LoginCheck * *(..))")
+    @Pointcut("execution(@org.hjf.annotation.aspect.LoginCheck * *(..))")
     public void methodAnnotated() {
 
     }
