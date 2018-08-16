@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
+import com.hjf.test.BuildConfig;
+
 import org.hjf.log.LogUtil;
 import org.hjf.util.EnvironUtils;
 
@@ -29,9 +31,12 @@ public class MyApp extends Application {
         String storageDir = Environment.getExternalStorageDirectory().toString();
         String logPath = storageDir + "/" + EnvironUtils.getApplicationID(getApplicationContext());
         LogUtil.init(getApplicationContext());
+        if (!BuildConfig.app_env.equals("product")) {
+            LogUtil.openLogcat(Log.VERBOSE);
+        }
         LogUtil.openLogcat(Log.VERBOSE);
-        LogUtil.openDiskLog(logPath + "/log/", Log.VERBOSE);
         LogUtil.openDatabaseLog(Log.VERBOSE);
+        LogUtil.openDiskLog(logPath + "/log/", Log.VERBOSE);
         LogUtil.openCrashLog(logPath + "/crash/");
         // 监听 Activity 创建和销毁，进行管理
         registerActivityLifecycleCallbacks(activityLifecycleListener);

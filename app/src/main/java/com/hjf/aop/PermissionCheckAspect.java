@@ -16,7 +16,7 @@ import com.hjf.MyApp;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.hjf.activity.BaseActivity;
+import com.hjf.base.activity.BaseActivity;
 import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.log.LogUtil;
 

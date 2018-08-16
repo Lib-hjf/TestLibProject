@@ -14,7 +14,7 @@ import com.hjf.test.t_conn.server.ConnServiceByNio;
 import com.hjf.test.t_conn.server.PushDataDispatcher;
 import com.hjf.util.NotifyUtil;
 
-import org.hjf.activity.BaseActivity;
+import com.hjf.base.activity.BaseActivity;
 import org.hjf.annotation.apt.Router;
 import org.hjf.kaconnect.nio.NioClient;
 import org.hjf.log.LogUtil;

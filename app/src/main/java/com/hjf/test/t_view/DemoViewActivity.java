@@ -7,7 +7,7 @@ import com.hjf.TRouter;
 import com.hjf.test.R;
 import com.hjf.util.NotifyUtil;
 
-import org.hjf.activity.FragmentStackActivity;
+import com.hjf.base.activity.FragmentStackActivity;
 import org.hjf.annotation.apt.Extra;
 import org.hjf.annotation.apt.Router;
 

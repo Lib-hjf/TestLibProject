@@ -7,10 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.hjf.base.activity.FragmentStackActivity;
 import com.hjf.test.R;
 import com.hjf.test.t_func.AOPDemoFragment;
 
-import org.hjf.activity.FragmentStackActivity;
 import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;

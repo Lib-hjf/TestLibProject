@@ -2,7 +2,7 @@ package com.hjf.test.t_func;
 
 import com.hjf.test.R;
 
-import org.hjf.activity.BaseFragment;
+import com.hjf.base.activity.BaseFragment;
 
 /**
  * WiFi自动切换

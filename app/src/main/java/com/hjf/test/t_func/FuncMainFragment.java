@@ -7,8 +7,8 @@ import android.view.View;
 
 import com.hjf.test.R;
 
-import org.hjf.activity.BaseFragment;
-import org.hjf.activity.FragmentStackActivity;
+import com.hjf.base.activity.BaseFragment;
+import com.hjf.base.activity.FragmentStackActivity;
 import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.ViewHolder;
@@ -32,7 +32,7 @@ public class FuncMainFragment extends BaseFragment {
 
     @Override
     public void bindView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         recyclerView.setAdapter(myAdapter = new MyAdapter(mActivityInBaseFragment));
         myAdapter.setDataList(getDatas());
@@ -60,12 +60,12 @@ public class FuncMainFragment extends BaseFragment {
                     FragmentStackActivity activity = (FragmentStackActivity) mContextInAdapter;
                     if ("Wi-Fi Auto Switch".equals(data)) {
                         activity.addFragmentInBackStack(WiFiAutoSwitchDemoFragment.newInstance(), true);
-                    }
-                    else if ("AOP Test".equals(data)) {
+                    } else if ("AOP Test".equals(data)) {
                         activity.addFragmentInBackStack(AOPDemoFragment.newInstance(), true);
-                    }
-                    else if ("Log DB UI".equals(data)) {
+                    } else if ("Log DB UI".equals(data)) {
                         LogUtil.gotoDBView();
+                    } else if ("MeshTask 、 LinkTask Test".equals(data)) {
+                        activity.addFragmentInBackStack(TaskDemoFragment.newInstance(), true);
                     }
                 }
             });
@@ -76,6 +76,7 @@ public class FuncMainFragment extends BaseFragment {
         List<String> strings = new ArrayList<>();
         strings.add("AOP Test");
         strings.add("Log DB UI");
+        strings.add("MeshTask 、 LinkTask Test");
 //        strings.add("Wi-Fi Auto Switch");
         return strings;
     }

@@ -10,9 +10,8 @@ import com.hjf.test.t_conn.DemoConnActivity;
 import com.hjf.test.t_func.FuncMainFragment;
 import com.hjf.test.t_view.DemoViewActivity;
 
-import org.hjf.activity.BaseFragment;
-import org.hjf.activity.FragmentStackActivity;
-import org.hjf.log.LogUtil;
+import com.hjf.base.activity.BaseFragment;
+import com.hjf.base.activity.FragmentStackActivity;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.ViewHolder;
 
@@ -35,7 +34,7 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void bindView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         recyclerView.setAdapter(myAdapter = new MyAdapter(mActivityInBaseFragment));
         myAdapter.setDataList(getDatas());
@@ -72,11 +71,6 @@ public class MainFragment extends BaseFragment {
                     }
                     // 功能类测试
                     else if ("Function Demo".equals(data)) {
-                        LogUtil.v("info");
-                        LogUtil.d("info");
-                        LogUtil.i("info");
-                        LogUtil.w("info");
-                        LogUtil.e("info");
                         ((FragmentStackActivity) mContextInAdapter).addFragmentInBackStack(FuncMainFragment.newInstance(), true);
                     }
                 }

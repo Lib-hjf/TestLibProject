@@ -7,8 +7,8 @@ import android.view.View;
 
 import com.hjf.test.R;
 
-import org.hjf.activity.BaseFragment;
-import org.hjf.activity.FragmentStackActivity;
+import com.hjf.base.activity.BaseFragment;
+import com.hjf.base.activity.FragmentStackActivity;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.ViewHolder;
 
@@ -31,7 +31,7 @@ public class ViewMainFragment extends BaseFragment {
 
     @Override
     public void bindView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         recyclerView.setAdapter(myAdapter = new MyAdapter(mActivityInBaseFragment));
         myAdapter.setDataList(getDatas());

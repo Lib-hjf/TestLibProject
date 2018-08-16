@@ -6,7 +6,7 @@ import android.view.View;
 import com.hjf.test.R;
 import com.hjf.util.NotifyUtil;
 
-import org.hjf.activity.BaseFragment;
+import com.hjf.base.activity.BaseFragment;
 import org.hjf.annotation.aspect.LoginCheck;
 import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.annotation.aspect.SingleClick;

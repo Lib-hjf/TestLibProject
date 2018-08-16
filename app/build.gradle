@@ -16,9 +16,16 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+
+            // 配置自定义信息
+            buildConfigField 'String', 'app_env', rootProject.application_env
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // 配置自定义信息
+            buildConfigField 'String', 'app_env', rootProject.application_env
         }
     }
 }
