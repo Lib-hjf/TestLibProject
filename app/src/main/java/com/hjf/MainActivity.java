@@ -37,7 +37,7 @@ public class MainActivity extends FragmentStackActivity {
      */
     @PermissionCheck({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     private void forLog2Disk() {
-        LogUtil.i("获取设备磁盘读写权限成功");
+        LogUtil.v("获取设备磁盘读写权限成功");
     }
 
     private void addContentFragment() {
@@ -74,6 +74,7 @@ public class MainActivity extends FragmentStackActivity {
 //        myAdapter.setDataList(getDatas());
         // 设置 Log 信息显示
     }
+
     private void stopDebug() {
 
     }
