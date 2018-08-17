@@ -1,7 +1,6 @@
 package com.hjf;
 
 import android.Manifest;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,18 +8,17 @@ import android.view.View;
 
 import com.hjf.base.activity.FragmentStackActivity;
 import com.hjf.test.R;
+import com.hjf.test.TestStringRecyclerAdapter;
 import com.hjf.test.t_func.AOPDemoFragment;
 
 import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.log.LogUtil;
-import org.hjf.view.recyclerview.AbsRecyclerAdapter;
-import org.hjf.view.recyclerview.ViewHolder;
 
 public class MainActivity extends FragmentStackActivity {
 
 
     private RecyclerView recyclerView;
-    private MyAdapter myAdapter;
+    private TestStringRecyclerAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,32 +68,12 @@ public class MainActivity extends FragmentStackActivity {
         if (recyclerView == null) {
             recyclerView = findViewById(R.id.rcv_debug_log);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(myAdapter = new MyAdapter(this));
+            recyclerView.setAdapter(myAdapter = new TestStringRecyclerAdapter(this));
         }
         recyclerView.setVisibility(View.VISIBLE);
 //        myAdapter.setDataList(getDatas());
         // 设置 Log 信息显示
     }
-
-    private static class MyAdapter extends AbsRecyclerAdapter<String> {
-
-        MyAdapter(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected ViewHolder.Build getViewHolderBuild(int position) {
-            return new ViewHolder.Build()
-                    .setLayoutRes(R.layout.v_textview);
-        }
-
-
-        @Override
-        protected void bindData2View(ViewHolder holder, String data, int position) {
-            holder.setText(R.id.v_textView, data);
-        }
-    }
-
     private void stopDebug() {
 
     }

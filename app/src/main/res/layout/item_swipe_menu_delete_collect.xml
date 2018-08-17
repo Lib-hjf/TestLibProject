@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_delete"
+        android:id="@+id/tv_swipe_menu_delete"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/red"
@@ -18,13 +18,13 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_main_big"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_collect"
+        app:layout_constraintEnd_toStartOf="@+id/tv_swipe_menu_collect"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_height="50dp" />
 
     <TextView
-        android:id="@+id/tv_collect"
+        android:id="@+id/tv_swipe_menu_collect"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/blue"
@@ -37,7 +37,7 @@
         android:textSize="@dimen/text_main_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_delete"
+        app:layout_constraintStart_toEndOf="@+id/tv_swipe_menu_delete"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_height="50dp" />
 

@@ -12,12 +12,12 @@ public class TestStringRecyclerAdapter extends AbsRecyclerAdapter<String> {
     }
 
     @Override
-    protected ViewHolder.Build getViewHolderBuild(int position) {
-        return new ViewHolder.Build().setLayoutRes(R.layout.v_textview);
+    protected int getLayoutRes(int itemViewType) {
+        return R.layout.v_textview;
     }
 
     @Override
-    protected void bindData2View(ViewHolder holder, String data, int position) {
+    protected void onBindViewHolder(ViewHolder holder, String data, int position) {
         holder.setText(R.id.v_textView, data);
     }
 }

@@ -3,6 +3,7 @@ package com.hjf.test.t_func;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.hjf.base.activity.BaseFragment;
 import com.hjf.test.R;
@@ -10,7 +11,7 @@ import com.hjf.test.TestStringRecyclerAdapter;
 
 import org.hjf.thread.LinkTask;
 import org.hjf.thread.MeshTask;
-import org.hjf.view.recyclerview.OnItemClickListener;
+import org.hjf.view.recyclerview.OnViewClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,9 @@ public class TaskDemoFragment extends BaseFragment {
         RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
         recyclerView.setAdapter(adapter = new TestStringRecyclerAdapter(getActivity()));
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
-        adapter.setOnItemClickListener(new OnItemClickListener() {
+        adapter.setOnViewClickListener(new OnViewClickListener() {
             @Override
-            public void onItemClickListener(int position) {
+            public void onViewClickListener(View view, int position) {
                 String data = adapter.getData(position);
                 if (TextUtils.isEmpty(data)) {
                     return;
@@ -55,7 +56,7 @@ public class TaskDemoFragment extends BaseFragment {
                         break;
                 }
             }
-        });
+        }, R.id.v_textView);
         adapter.setDataList(getData());
     }
 
