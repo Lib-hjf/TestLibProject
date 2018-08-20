@@ -35,7 +35,7 @@ public class ViewMainFragment extends BaseFragment {
         recyclerView.setAdapter(myAdapter = new TestStringRecyclerAdapter(mActivityInBaseFragment));
         myAdapter.setOnViewClickListener(new OnViewClickListener() {
             @Override
-            public void onViewClickListener(View view, int position) {
+            public void onViewClickListener(View clickView, int position) {
                 FragmentStackActivity activity = (FragmentStackActivity) mActivityInBaseFragment;
                 String data = myAdapter.getData(position);
                 if ("Recycler View Swipe Demo".equals(data)) {

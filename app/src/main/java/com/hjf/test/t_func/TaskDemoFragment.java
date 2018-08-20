@@ -40,7 +40,7 @@ public class TaskDemoFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         adapter.setOnViewClickListener(new OnViewClickListener() {
             @Override
-            public void onViewClickListener(View view, int position) {
+            public void onViewClickListener(View clickView, int position) {
                 String data = adapter.getData(position);
                 if (TextUtils.isEmpty(data)) {
                     return;

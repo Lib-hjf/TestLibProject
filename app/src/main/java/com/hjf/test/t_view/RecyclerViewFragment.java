@@ -43,8 +43,8 @@ public class RecyclerViewFragment extends BaseFragment {
         recyclerView.setAdapter(myAdapter = new MyAdapter(mActivityInBaseFragment));
         myAdapter.setOnViewClickListener(new OnViewClickListener() {
             @Override
-            public void onViewClickListener(View view, int position) {
-                switch (view.getId()) {
+            public void onViewClickListener(View clickView, int position) {
+                switch (clickView.getId()) {
                     case R.id.v_textView:
                         NotifyUtil.toast(myAdapter.getData(position).name);
                         break;
@@ -54,9 +54,10 @@ public class RecyclerViewFragment extends BaseFragment {
                 }
             }
         }, R.id.tv_swipe_menu_delete, R.id.v_textView);
+
         myAdapter.setOnViewLongClickListener(new OnViewLongClickListener() {
             @Override
-            public boolean onViewLongClickListener(View view, int position) {
+            public boolean onViewLongClickListener(View clickView, int position) {
                 List<ItemData> datas = new ArrayList<>();
                 datas.add(new ItemData(SwipeLayout.SwipeModel.NONE, "Auto Add1", 1));
                 datas.add(new ItemData(SwipeLayout.SwipeModel.NONE, "Auto Add2", 1));

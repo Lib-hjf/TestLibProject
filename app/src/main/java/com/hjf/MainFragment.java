@@ -38,7 +38,7 @@ public class MainFragment extends BaseFragment {
         recyclerView.setAdapter(myAdapter = new TestStringRecyclerAdapter(mActivityInBaseFragment));
         myAdapter.setOnViewClickListener(new OnViewClickListener() {
             @Override
-            public void onViewClickListener(View view, int position) {
+            public void onViewClickListener(View clickView, int position) {
                 String data = myAdapter.getData(position);
                 // 自定义View Demo
                 if ("CusView Demo".equals(data)) {
