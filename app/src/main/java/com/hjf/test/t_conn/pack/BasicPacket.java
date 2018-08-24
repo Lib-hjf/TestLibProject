@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * 基本数据包，用于App本地和Cloud服务器端数据传递和解析
- * TODO 直接将byte当int使用可以吗
  */
 public class BasicPacket {
 
@@ -18,7 +17,6 @@ public class BasicPacket {
     private int packetSeq;  // 序列号
     private byte packetRet = (byte) 0x00;
     private byte packetVersion = (byte) 0x01; // 版本号
-
     protected String contentStr = "";
 
     BasicPacket() {

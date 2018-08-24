@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.hjf.view.refresh.RefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:enable_load_more="true"
+        app:enable_refresh="true"
+        app:load_more_foot_layout="@layout/my_load_more_foot"
+        app:reset_animal_duration_millis="1000">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/v_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </org.hjf.view.refresh.RefreshLayout>
+
+</FrameLayout>
+

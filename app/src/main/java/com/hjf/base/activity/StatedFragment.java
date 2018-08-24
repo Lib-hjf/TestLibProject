@@ -12,7 +12,7 @@ import org.hjf.log.LogUtil;
  */
 /**
  * ：
- * 实现Fragment状态保存的新姿势 ： TODO
+ * TODO 实现Fragment状态保存的新姿势 ：
  * 不在 Fragment 中对View进行数据的保存和恢复，让 View 自己实现状态的保存和恢复。这也更符合 Android 的设计
  * 使用 Fragment、ViewPager、CusView 的结构
  * 1.【StatedFragment】、【NestedActivityResultFragment】

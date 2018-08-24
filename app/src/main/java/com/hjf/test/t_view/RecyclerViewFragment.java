@@ -13,8 +13,8 @@ import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.OnViewClickListener;
 import org.hjf.view.recyclerview.OnViewLongClickListener;
-import org.hjf.view.recyclerview.SwipeHolder;
-import org.hjf.view.recyclerview.SwipeLayout;
+import org.hjf.view.recyclerview.SideSlipHolder;
+import org.hjf.view.recyclerview.SideSlipLayout;
 import org.hjf.view.recyclerview.ViewHolder;
 
 import java.util.ArrayList;
@@ -38,7 +38,6 @@ public class RecyclerViewFragment extends BaseFragment {
     public void bindView() {
         NotifyUtil.toast("长按条目添加数据");
         RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
-//        recyclerView.setLayoutManager(new GridLayoutManager(mActivityInBaseFragment, 2));
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         recyclerView.setAdapter(myAdapter = new MyAdapter(mActivityInBaseFragment));
         myAdapter.setOnViewClickListener(new OnViewClickListener() {
@@ -59,9 +58,9 @@ public class RecyclerViewFragment extends BaseFragment {
             @Override
             public boolean onViewLongClickListener(View clickView, int position) {
                 List<ItemData> datas = new ArrayList<>();
-                datas.add(new ItemData(SwipeLayout.SwipeModel.NONE, "Auto Add1", 1));
-                datas.add(new ItemData(SwipeLayout.SwipeModel.NONE, "Auto Add2", 1));
-                datas.add(new ItemData(SwipeLayout.SwipeModel.NONE, "Auto Add3", 1));
+                datas.add(new ItemData(SideSlipLayout.SwipeModel.NONE, "Auto Add1", 1));
+                datas.add(new ItemData(SideSlipLayout.SwipeModel.NONE, "Auto Add2", 1));
+                datas.add(new ItemData(SideSlipLayout.SwipeModel.NONE, "Auto Add3", 1));
                 myAdapter.addDataList(position, datas);
                 return true;
             }
@@ -84,11 +83,11 @@ public class RecyclerViewFragment extends BaseFragment {
         protected ViewHolder getViewHolder(View layoutView, final int itemViewType) {
             int[] modelAndMenuRes = ItemData.getModelAndMenuResByCode(itemViewType);
 
-            SwipeLayout swipeLayout = new SwipeLayout(mContextInAdapter);
+            SideSlipLayout swipeLayout = new SideSlipLayout(mContextInAdapter);
             swipeLayout.setSwipeModel(modelAndMenuRes[0]);
             swipeLayout.setView(layoutView, modelAndMenuRes[1]);
 
-            return new SwipeHolder(swipeLayout);
+            return new SideSlipHolder(swipeLayout);
         }
 
         @Override
@@ -110,7 +109,7 @@ public class RecyclerViewFragment extends BaseFragment {
             int swipeModel;
             // 偶数在右边，奇数在左边
             String str = i % 2 == 0 ? "右边" : "左边";
-            swipeModel = i % 2 == 0 ? SwipeLayout.SwipeModel.RIGHT : SwipeLayout.SwipeModel.LEFT;
+            swipeModel = i % 2 == 0 ? SideSlipLayout.SwipeModel.RIGHT : SideSlipLayout.SwipeModel.LEFT;
             // 3的倍数自定义侧边栏
             if (i % 3 == 0) {
                 str += " 自定义侧边菜单";
@@ -120,7 +119,7 @@ public class RecyclerViewFragment extends BaseFragment {
             // 5的倍数没有侧边栏
             if (i % 5 == 0) {
                 str = "没有侧边菜单";
-                swipeModel = SwipeLayout.SwipeModel.NONE;
+                swipeModel = SideSlipLayout.SwipeModel.NONE;
             }
             strings.add(new ItemData(swipeModel, str + "  " + i, i % 3 == 0 ? 2 : 1));
         }
@@ -128,7 +127,7 @@ public class RecyclerViewFragment extends BaseFragment {
     }
 
     private static class ItemData {
-        @SwipeLayout.SwipeModel
+        @SideSlipLayout.SwipeModel
         private int swipeModel;
         private String name;
         private int menuLayoutResCode;// 1 default  2 cus
@@ -139,7 +138,7 @@ public class RecyclerViewFragment extends BaseFragment {
             this.menuLayoutResCode = menuLayoutResCode;
         }
 
-        private static int getCodeByModelAndMenuRes(@SwipeLayout.SwipeModel int model, int menuLayoutResCode) {
+        private static int getCodeByModelAndMenuRes(@SideSlipLayout.SwipeModel int model, int menuLayoutResCode) {
             return model * 10 + menuLayoutResCode;
         }
 
