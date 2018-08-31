@@ -1,11 +1,26 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!-- 占用系统的状态栏空间 -->
+        <item name="android:fitsSystemWindows">false</item>
+        <!-- View 设置的内边距，但是滑动的时候忽略这个内边距，将这个设置为false，默认为true -->
+        <!-- 例如：RecyclerView 设置了 paddingTop，当 clipToPadding = false ，上滑时会忽略 paddingTop的属性 -->
+        <!--<item name="android:clipToPadding">true</item>-->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="BaseAppTheme" />
+
+    <!-- 使用屏幕适配方案 {@link ScreenAdapterUtils } ，高度指定使用设计图高度 -->
+    <style name="FixedActionBarAppTheme" parent="AppTheme">
+        <!-- ActionBat 高度设置 -->
+        <!-- 使用屏幕适配方案 {@link ScreenAdapterUtils } ，高度指定使用设计图高度 -->
+        <item name="android:actionBarSize">60dp</item>
     </style>
 
 </resources>

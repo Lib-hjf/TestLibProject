@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.hjf.TRouter;
 import com.hjf.base.activity.BaseFragment;
 import com.hjf.base.activity.FragmentStackActivity;
 import com.hjf.test.R;
@@ -38,8 +39,17 @@ public class ViewMainFragment extends BaseFragment {
             public void onViewClickListener(View clickView, int position) {
                 FragmentStackActivity activity = (FragmentStackActivity) mActivityInBaseFragment;
                 String data = myAdapter.getData(position);
+                // Recycler View Swipe Demo
                 if ("Recycler View Swipe Demo".equals(data)) {
-                    activity.addFragmentInBackStack(RecyclerViewFragment.newInstance(), true);
+                    activity.addFragmentInBackStack(RecyclerSiwpeItemFragment.newInstance(), true);
+                }
+                // Refresh Layout View Demo
+                else if ("Refresh Layout View Demo".equals(data)) {
+                    activity.addFragmentInBackStack(RefreshLayoutFragment.newInstance(), true);
+                }
+                // Screen Adapter Demo
+                else if ("Screen Adapter Demo".equals(data)) {
+                    TRouter.go(ScreenAdapterActivity.class);
                 }
             }
         }, R.id.v_textView);
@@ -49,6 +59,8 @@ public class ViewMainFragment extends BaseFragment {
     private List<String> getDatas() {
         List<String> strings = new ArrayList<>();
         strings.add("Recycler View Swipe Demo");
+        strings.add("Refresh Layout View Demo");
+        strings.add("Screen Adapter Demo");
         return strings;
     }
 }

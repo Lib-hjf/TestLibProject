@@ -17,7 +17,10 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 
+import com.hjf.MyApp;
 import com.hjf.test.R;
+
+import org.hjf.util.ScreenAdapterUtils;
 
 
 /**
@@ -59,6 +62,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 屏幕适配，设计图宽为 360
+        if (!ScreenAdapterUtils.isAdaptScreen(MyApp.getInstance())) {
+            ScreenAdapterUtils.adaptScreen4VerticalSlide(this, MyApp.getInstance(), 360);
+        }
         iniFrameLayoutView();
     }
 

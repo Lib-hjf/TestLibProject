@@ -8,9 +8,11 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:empty_view_layout="@layout/v_my_empty_view"
         app:enable_load_more="true"
         app:enable_refresh="true"
-        app:load_more_foot_layout="@layout/my_load_more_foot"
+        app:load_more_foot_layout="@layout/v_my_load_more_foot"
+        app:load_more_when_residual_item="5"
         app:reset_animal_duration_millis="1000">
 
         <android.support.v7.widget.RecyclerView

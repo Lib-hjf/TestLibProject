@@ -37,6 +37,10 @@
             android:name=".t_conn.DemoConnActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_demo_conn" />
+        <activity
+            android:name=".t_view.ScreenAdapterActivity"
+            android:label="@string/title_activity_demo_view"
+            android:theme="@style/FixedActionBarAppTheme" />
     </application>
 
 </manifest>

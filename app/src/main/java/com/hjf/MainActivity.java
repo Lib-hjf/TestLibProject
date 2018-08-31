@@ -35,7 +35,7 @@ public class MainActivity extends FragmentStackActivity {
 
     private void addContentFragment() {
         BaseFragment testFragment = null;
-        testFragment = RefreshLayoutFragment.newInstance();
+//        testFragment = RefreshLayoutFragment.newInstance();
 
         // 开启测试主界面
         if (testFragment != null) {

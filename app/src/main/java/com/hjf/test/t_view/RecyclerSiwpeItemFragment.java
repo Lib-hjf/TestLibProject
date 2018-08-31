@@ -20,13 +20,13 @@ import org.hjf.view.recyclerview.ViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewFragment extends BaseFragment {
+public class RecyclerSiwpeItemFragment extends BaseFragment {
 
     private MyAdapter myAdapter;
 
     public static BaseFragment newInstance() {
-        RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
-        return recyclerViewFragment;
+        RecyclerSiwpeItemFragment recyclerSiwpeItemFragment = new RecyclerSiwpeItemFragment();
+        return recyclerSiwpeItemFragment;
     }
 
     @Override

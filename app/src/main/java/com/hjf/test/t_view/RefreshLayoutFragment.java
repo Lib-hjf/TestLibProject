@@ -1,8 +1,11 @@
 package com.hjf.test.t_view;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.hjf.base.activity.BaseFragment;
 import com.hjf.test.R;
@@ -52,7 +55,7 @@ public class RefreshLayoutFragment extends BaseFragment {
                         .addRunnableInUIThread(new Runnable() {
                             @Override
                             public void run() {
-                                myAdapter.setDataList(getDataList(0, 20));
+                                myAdapter.setDataList(getDataList(0, 0));
                                 refreshLayout.loadComplete();
                             }
                         })
@@ -81,7 +84,17 @@ public class RefreshLayoutFragment extends BaseFragment {
                         .execute();
             }
         });
-
+        View emptyView = refreshLayout.getEmptyView();
+        if (emptyView != null) {
+            TextView textView = emptyView.findViewById(R.id.tv_hint);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO 现在加载动画
+                    myAdapter.setDataList(getDataList(0, 10));
+                }
+            });
+        }
         // recycler view
         RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
@@ -98,8 +111,13 @@ public class RefreshLayoutFragment extends BaseFragment {
             }
         }, R.id.v_textView);
 
-        // init data
-        myAdapter.setDataList(getDataList(0, 20));
+        // query data
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                myAdapter.setDataList(getDataList(0, 0));
+            }
+        }, 10);
     }
 
     private static List<String> getDataList(int startIndex, int num) {
