@@ -16,7 +16,9 @@ import com.hjf.MyApp;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+
 import com.hjf.base.activity.BaseActivity;
+
 import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.log.LogUtil;
 
@@ -34,7 +36,7 @@ public class PermissionCheckAspect {
 
         // 1. 判断当前手机API版本是否 >= 6.0
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            LogUtil.e("Build.VERSION.SDK_INT = {0}", Build.VERSION.SDK_INT);
+            LogUtil.d("Build.VERSION.SDK_INT = {0}", Build.VERSION.SDK_INT);
             // 执行原方法
             joinPoint.proceed();
             return;
@@ -49,9 +51,9 @@ public class PermissionCheckAspect {
         }
         // 2.2 如果为空，表示申请权限已经获取
         if (toPermissionList.size() == 0) {
+            LogUtil.d("PermissionCheckAspect - permission.length = 0");
             // 执行原方法
             joinPoint.proceed();
-            LogUtil.e("PermissionCheckAspect - permission.length = 0");
             return;
         }
 
@@ -66,7 +68,7 @@ public class PermissionCheckAspect {
             ((BaseActivity) topActivity).setPermissionsResultCallback(REQUEST_CODE_PERMISSION, new ActivityCompat.OnRequestPermissionsResultCallback() {
                 @Override
                 public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-                    // 若发现有无授权情况，不再执行
+                    // 若发现无授权情况，不再执行
                     for (int grantResultCode : grantResults) {
                         if (grantResultCode != PackageManager.PERMISSION_GRANTED) {
                             return;

@@ -25,7 +25,11 @@ import org.hjf.util.ScreenAdapterUtils;
 
 /**
  * Created by hjf on 2017/1/22.
- * Activity 基类
+ * Activity 基类，功能如下：
+ * -    title
+ * -    Screen adapter
+ * -    progress view
+ * -    aop permissions ask
  * <p>
  * 解决办法
  * - 横竖屏切换：{@link #onConfigurationChanged(Configuration)}
@@ -96,9 +100,9 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Activity 横竖屏切换
      * <p>
      * XML 配置 android:configChanges 属性
-     * - 不配置：竖->横【生命周期】X1、横->竖【生命周期】X2
-     * - orientation：竖->横、横->竖【生命周期】X1
-     * - "orientation|keyboardHidden|screenSize"：竖->横、横->竖【onConfigurationChanged() X1】
+     * - 1. 不配置：竖->横【生命周期】X1、横->竖【生命周期】X2
+     * - 2. orientation：竖->横、横->竖【生命周期】X1
+     * - 3. "orientation|keyboardHidden|screenSize"：竖->横、横->竖【onConfigurationChanged() X1】
      * <p>
      * 建议配置第三个，不会重走 Activity 生命周期，而会调起此方法。
      * 可以：{@link #setContentView(int)} --> {@link #onContentChanged()} 重新设置整个布局文件
@@ -144,7 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     @Override
     public void setContentView(View view) {
-        this.setContentView(view, null);
+        this.setContentView(view, view.getLayoutParams());
     }
 
     /**
@@ -152,9 +156,13 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 拦截不进行 Activity 的默认动作
      */
     @Override
-    public void setContentView(View view, ViewGroup.LayoutParams params) {
+    public void setContentView(View view, @Nullable ViewGroup.LayoutParams params) {
         this.mContentParentLayout.removeAllViews();
-        this.mContentParentLayout.addView(view, params);
+        if (params == null) {
+            this.mContentParentLayout.addView(view);
+        } else {
+            this.mContentParentLayout.addView(view, params);
+        }
         super.setContentView(this.mBaseLayoutView);
     }
 
@@ -221,4 +229,5 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setActionableWhenMask(boolean actionable) {
         this.isActionableWhenMaskIsShowing = actionable;
     }
+
 }

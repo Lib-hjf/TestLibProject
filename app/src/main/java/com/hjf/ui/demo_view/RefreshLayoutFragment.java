@@ -1,4 +1,4 @@
-package com.hjf.test.t_view;
+package com.hjf.ui.demo_view;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -96,7 +96,7 @@ public class RefreshLayoutFragment extends BaseFragment {
             });
         }
         // recycler view
-        RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         // recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(myAdapter = new TestStringRecyclerAdapter(mActivityInBaseFragment));

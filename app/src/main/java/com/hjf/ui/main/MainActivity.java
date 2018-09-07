@@ -1,4 +1,4 @@
-package com.hjf;
+package com.hjf.ui.main;
 
 import android.Manifest;
 import android.os.Bundle;
@@ -6,13 +6,11 @@ import android.os.Bundle;
 import com.hjf.base.activity.BaseFragment;
 import com.hjf.base.activity.FragmentStackActivity;
 import com.hjf.test.R;
-import com.hjf.test.t_view.RefreshLayoutFragment;
 
 import org.hjf.annotation.aspect.PermissionCheck;
 import org.hjf.log.LogUtil;
 
 public class MainActivity extends FragmentStackActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

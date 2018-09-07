@@ -35,7 +35,7 @@ public class TaskDemoFragment extends BaseFragment {
 
     @Override
     public void bindView() {
-        RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(adapter = new TestStringRecyclerAdapter(getActivity()));
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         adapter.setOnViewClickListener(new OnViewClickListener() {

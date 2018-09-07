@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"/>
 
-
     <!-- 进度条 -->
     <ViewStub
         android:id="@+id/vs_progress"

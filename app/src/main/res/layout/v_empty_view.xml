@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="@string/hint_no_find_data"
-        android:textColor="@color/gray"
+        android:textColor="@color/grey"
         android:textSize="16.0sp" />
 
 </LinearLayout>

@@ -33,7 +33,6 @@ public abstract class BaseActivityNavigationBar extends BaseActivity {
      * 设置底部导航栏
      */
     public View setNavigationBarLayout(@LayoutRes int layoutResId) {
-
         if (this.mNavigationBar == null) {
             this.vsNavigationBarParentLayout.setLayoutResource(layoutResId);
             this.mNavigationBar = this.vsNavigationBarParentLayout.inflate();

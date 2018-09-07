@@ -6,4 +6,8 @@
     <string name="title_activity_demo_conn">DemoConnActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+    <string name="hint_long">▆▆▆▆▆▆▆▆▆▆▆▆▆</string>
+    <string name="hint_short">▆▆▆▆▆</string>
 </resources>

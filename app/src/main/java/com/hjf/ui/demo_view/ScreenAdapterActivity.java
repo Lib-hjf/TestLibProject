@@ -1,4 +1,4 @@
-package com.hjf.test.t_view;
+package com.hjf.ui.demo_view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

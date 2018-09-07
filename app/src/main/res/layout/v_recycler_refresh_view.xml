@@ -16,7 +16,7 @@
         app:reset_animal_duration_millis="1000">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/v_recyclerView"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </org.hjf.view.refresh.RefreshLayout>

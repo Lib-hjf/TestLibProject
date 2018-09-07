@@ -1,4 +1,4 @@
-package com.hjf;
+package com.hjf.model;
 
 import android.text.TextUtils;
 

@@ -1,4 +1,4 @@
-package org.hjf.ap;
+package org.hjf.apt;
 
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -7,9 +7,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.TypeVariableName;
 
 import org.hjf.annotation.apt.Extra;
 import org.hjf.annotation.apt.Router;
@@ -36,7 +34,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
-import static com.squareup.javapoet.TypeSpec.classBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
@@ -57,6 +54,7 @@ import static javax.lang.model.element.Modifier.STATIC;
         "org.hjf.annotation.apt.Router",
 })
 public class RouterProcessor extends AbstractProcessor {
+    public static final String PACKAGE_NAME = "com.hjf";
 
     /**
      * 文件相关的辅助类
@@ -82,8 +80,8 @@ public class RouterProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        // 1. 添加Class属性申明
-        TypeSpec.Builder tb = classBuilder("TRouter")
+        // 1. 添加Class和其属性申明
+        TypeSpec.Builder tb = TypeSpec.classBuilder("TRouter")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addJavadoc("@全局路由器 此类由{@link $L}自动生成", RouterProcessor.class.getName());
 
@@ -94,7 +92,18 @@ public class RouterProcessor extends AbstractProcessor {
                 .build();
         tb.addField(extraField);
 
-        // 3.1 add method: go(Class clazz, HashMap extra, View view) 方法
+        // 3.1 add method: go(String activityClassPath, HashMap extra, View view) 方法
+        tb.addMethod(MethodSpec.methodBuilder("go")
+                .addJavadoc("@此方法由apt自动生成")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(String.class, "activityClassPath")
+                .addParameter(HashMap.class, "extra")
+                // android class
+                .addParameter(ClassName.get("android.view", "View"), "view")
+                .addCode(getBlock4goString(roundEnv))
+                .build());
+
+        // 3.2 add method: go(Class clazz, HashMap extra, View view) 方法
         tb.addMethod(MethodSpec.methodBuilder("go")
                 .addJavadoc("@此方法由apt自动生成")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
@@ -102,15 +111,7 @@ public class RouterProcessor extends AbstractProcessor {
                 .addParameter(HashMap.class, "extra")
                 // android class
                 .addParameter(ClassName.get("android.view", "View"), "view")
-                .addCode(getBlock4go(roundEnv))
-                .build());
-
-        // 3.2 add overloading method: go(Class clazz)
-        tb.addMethod(MethodSpec.methodBuilder("go")
-                .addJavadoc("@此方法由apt自动生成")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addParameter(Class.class, "clazz")
-                .addCode("go(clazz,null,null);\n")
+                .addCode(getBlock4goClass())
                 .build());
 
         // 3.3 add overloading method: go(Class clazz, View view)
@@ -120,6 +121,14 @@ public class RouterProcessor extends AbstractProcessor {
                 .addParameter(Class.class, "clazz")
                 .addParameter(ClassName.get("android.view", "View"), "view")
                 .addCode("go(clazz,null,view);\n")
+                .build());
+
+        // 3.4 add overloading method: go(Class clazz)
+        tb.addMethod(MethodSpec.methodBuilder("go")
+                .addJavadoc("@此方法由apt自动生成")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(Class.class, "clazz")
+                .addCode("go(clazz,null,null);\n")
                 .build());
 
         // 3.4 add method: bind(Activity activity)
@@ -143,7 +152,7 @@ public class RouterProcessor extends AbstractProcessor {
 
         // 4.1 帮助类 - ExtraHelper
         ClassName routerClassName = ClassName.get("com.hjf", "TRouter");
-        TypeSpec.Builder ehb = classBuilder("ExtraHelper")
+        TypeSpec.Builder ehb = TypeSpec.classBuilder("ExtraHelper")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addJavadoc("@全局路由器参数传递帮助类 此类由{@link $L}自动生成", RouterProcessor.class.getName());
         FieldSpec helperExtraField = FieldSpec.builder(ParameterizedTypeName.get(HashMap.class, String.class, Object.class),
@@ -190,38 +199,15 @@ public class RouterProcessor extends AbstractProcessor {
         return true;
     }
 
-    /*
-    public static void getExtraHelp(Class clazz, HashMap extra) {
-        go(clazz, extra, null);
-    }
-
-    class ExtraHelper {
-
-        private HashMap<String, Object> extraCache = new HashMap<>();
-
-        public ExtraHelp addExtra(String key, Object object) {
-            ExtraHelp.this.extraCache.put(key, object);
-            return this;
-        }
-
-        public void go(Class clazz, View view) {
-            TRouter.go(clazz, ExtraHelp.this.extraCache, view);
-        }
-
-        public void go(Class clazz) {
-            TRouter.go(clazz, ExtraHelp.this.extraCache, null);
-        }
-    }
-    */
-
-    private CodeBlock getBlock4go(RoundEnvironment roundEnv) {
+    // for method go(String activityClassPath, HashMap extra, View view)
+    private CodeBlock getBlock4goString(RoundEnvironment roundEnv) {
 
         // 导入需要用到的 android 专属类（Java Lib 不能直接引入）
-        ClassName appClassName = ClassName.get("com.hjf", "MyApp");
-        ClassName mActivityName = ClassName.get("android.app", "Activity");
         ClassName mIntentClassName = ClassName.get("android.content", "Intent");
         ClassName mActivityCompatName = ClassName.get("android.support.v4.app", "ActivityCompat");
         ClassName mActivityOptionsCompatName = ClassName.get("android.support.v4.app", "ActivityOptionsCompat");
+        ClassName appClassName = ClassName.get("com.hjf", "MyApp");
+        ClassName mActivityName = ClassName.get("android.app", "Activity");
 
         // 组装代码块，用于方法内容添加
         // $L: 直接使用 android.support.v4.app.ActivityCompat.startActivity()
@@ -230,20 +216,19 @@ public class RouterProcessor extends AbstractProcessor {
         CodeBlock.Builder blockBuilderGo = CodeBlock.builder();
         blockBuilderGo.addStatement("mCurActivityExtra=extra");
         blockBuilderGo.addStatement("$T context = $T.getTopActivity()", mActivityName, appClassName);
-        blockBuilderGo.addStatement("String name = clazz.getName()");
-        blockBuilderGo.beginControlFlow(" switch (name)");// {}括号开始
+        blockBuilderGo.beginControlFlow(" switch (activityClassPath)");// {}括号开始
 
         // 1. 遍历被注释的类，有除重处理
-        List<String> classNameCache = new ArrayList<>();
+        List<ClassName> classPathCache = new ArrayList<>();
         for (TypeElement element : ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Router.class))) {
-            String className = ClassName.get(element).toString();
+            ClassName className = ClassName.get(element);
             // 重复判断
-            if (classNameCache.contains(className)) {
+            if (classPathCache.contains(className)) {
                 continue;
             }
-            classNameCache.add(className);
+            classPathCache.add(className);
 
-            blockBuilderGo.add("case $S: \n", className);//1
+            blockBuilderGo.add("case $S: \n", className.toString());//1
 
             // 检查是否有转场动画
             Element sceneTransitionElement = null;
@@ -283,6 +268,15 @@ public class RouterProcessor extends AbstractProcessor {
         }
         blockBuilderGo.addStatement("default: break");
         blockBuilderGo.endControlFlow();
+        return blockBuilderGo.build();
+    }
+
+    // for method go(Class clazz, HashMap extra, View view)
+    private CodeBlock getBlock4goClass() {
+        // 利用 clazz 对象获取 ActivityClassPath
+        CodeBlock.Builder blockBuilderGo = CodeBlock.builder();
+        blockBuilderGo.addStatement("String activityClassPath = clazz.getName()");
+        blockBuilderGo.addStatement("go(activityClassPath, extra, view)");
         return blockBuilderGo.build();
     }
 

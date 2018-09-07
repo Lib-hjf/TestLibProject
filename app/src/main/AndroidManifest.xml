@@ -22,7 +22,7 @@
         <service android:name=".t_conn.server.ConnServiceByNio" />
 
         <!-- Activity -->
-        <activity android:name="com.hjf.MainActivity">
+        <activity android:name="com.hjf.ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".t_view.DemoViewActivity"
+            android:name="com.hjf.ui.demo_view.DemoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_demo_view" />
         <activity
@@ -38,7 +38,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_demo_conn" />
         <activity
-            android:name=".t_view.ScreenAdapterActivity"
+            android:name="com.hjf.ui.demo_view.ScreenAdapterActivity"
             android:label="@string/title_activity_demo_view"
             android:theme="@style/FixedActionBarAppTheme" />
     </application>

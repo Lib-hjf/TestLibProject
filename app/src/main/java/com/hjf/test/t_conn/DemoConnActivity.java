@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.hjf.MyApp;
+import com.hjf.base.activity.BaseActivity;
 import com.hjf.test.R;
 import com.hjf.test.t_conn.message.MessageType;
 import com.hjf.test.t_conn.pack.HeartbeatPacket;
@@ -14,7 +15,6 @@ import com.hjf.test.t_conn.server.ConnServiceByNio;
 import com.hjf.test.t_conn.server.PushDataDispatcher;
 import com.hjf.util.NotifyUtil;
 
-import com.hjf.base.activity.BaseActivity;
 import org.hjf.annotation.apt.Router;
 import org.hjf.kaconnect.nio.NioClient;
 import org.hjf.log.LogUtil;
@@ -29,7 +29,7 @@ public class DemoConnActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.a_demo_conn_nio);
+        this.setContentView(R.layout.a_demo_conn_nio);
 
         // 登录包处理
         PushDataDispatcher.getInstance().registerListener(MessageType.MOBILE_REGISTER_RESP, new PushDataDispatcher.OnReceiveListener() {
@@ -46,7 +46,6 @@ public class DemoConnActivity extends BaseActivity implements View.OnClickListen
                 NotifyUtil.toast("收到心跳回应包");
             }
         });
-
 
         // 开启长连接任务
         startService(new Intent(this, ConnServiceByNio.class));
@@ -89,5 +88,4 @@ public class DemoConnActivity extends BaseActivity implements View.OnClickListen
         HeartbeatPacket heartbeatPacket = new HeartbeatPacket();
         NioClient.getInstance().pushData(ByteBuffer.wrap(heartbeatPacket.toBytes()));
     }
-
 }

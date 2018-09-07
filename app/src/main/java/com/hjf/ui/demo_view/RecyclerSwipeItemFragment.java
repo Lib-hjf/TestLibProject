@@ -1,6 +1,7 @@
-package com.hjf.test.t_view;
+package com.hjf.ui.demo_view;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,20 +14,23 @@ import org.hjf.log.LogUtil;
 import org.hjf.view.recyclerview.AbsRecyclerAdapter;
 import org.hjf.view.recyclerview.OnViewClickListener;
 import org.hjf.view.recyclerview.OnViewLongClickListener;
-import org.hjf.view.recyclerview.SideSlipHolder;
+import org.hjf.view.recyclerview.SideSlipCacheHolder;
 import org.hjf.view.recyclerview.SideSlipLayout;
-import org.hjf.view.recyclerview.ViewHolder;
+import org.hjf.view.recyclerview.ViewCacheHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerSiwpeItemFragment extends BaseFragment {
+/**
+ * FIXME 删除后侧栏菜单没有复位
+ */
+public class RecyclerSwipeItemFragment extends BaseFragment {
 
     private MyAdapter myAdapter;
 
     public static BaseFragment newInstance() {
-        RecyclerSiwpeItemFragment recyclerSiwpeItemFragment = new RecyclerSiwpeItemFragment();
-        return recyclerSiwpeItemFragment;
+        RecyclerSwipeItemFragment recyclerSwipeItemFragment = new RecyclerSwipeItemFragment();
+        return recyclerSwipeItemFragment;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class RecyclerSiwpeItemFragment extends BaseFragment {
     @Override
     public void bindView() {
         NotifyUtil.toast("长按条目添加数据");
-        RecyclerView recyclerView = findViewById(R.id.v_recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivityInBaseFragment));
         recyclerView.setAdapter(myAdapter = new MyAdapter(mActivityInBaseFragment));
         myAdapter.setOnViewClickListener(new OnViewClickListener() {
@@ -68,6 +72,7 @@ public class RecyclerSiwpeItemFragment extends BaseFragment {
         myAdapter.setDataList(getDatas());
     }
 
+
     private static class MyAdapter extends AbsRecyclerAdapter<ItemData> {
 
         MyAdapter(Context context) {
@@ -75,29 +80,29 @@ public class RecyclerSiwpeItemFragment extends BaseFragment {
         }
 
         @Override
-        protected int getLayoutRes(int itemViewType) {
+        protected int getItemLayoutRes(int itemViewType) {
             return R.layout.v_textview;
-        }
-
-        @Override
-        protected ViewHolder getViewHolder(View layoutView, final int itemViewType) {
-            int[] modelAndMenuRes = ItemData.getModelAndMenuResByCode(itemViewType);
-
-            SideSlipLayout swipeLayout = new SideSlipLayout(mContextInAdapter);
-            swipeLayout.setSwipeModel(modelAndMenuRes[0]);
-            swipeLayout.setView(layoutView, modelAndMenuRes[1]);
-
-            return new SideSlipHolder(swipeLayout);
         }
 
         @Override
         public int getItemViewType(int position) {
             ItemData data = getData(position);
-            return ItemData.getCodeByModelAndMenuRes(data.swipeModel, data.menuLayoutResCode);
+            return data.getCodeByModelAndMenuRes();
         }
 
+
         @Override
-        protected void onBindViewHolder(ViewHolder holder, final ItemData data, final int position) {
+        protected ViewCacheHolder getViewHolder(View layoutView, final int itemViewType) {
+            ItemData data = ItemData.createByCode(itemViewType);
+
+            SideSlipLayout swipeLayout = new SideSlipLayout(mContextInAdapter);
+            swipeLayout.setSwipeModel(data.getSwipeModel());
+            swipeLayout.setView(layoutView, data.getLayoutResByResCode());
+
+            return new SideSlipCacheHolder(swipeLayout);
+        }
+        @Override
+        protected void onBindViewHolder(ViewCacheHolder holder, final ItemData data, final int position) {
             LogUtil.d("onBindViewHolder " + position);
             holder.setText(R.id.v_textView, data.name);
         }
@@ -121,16 +126,17 @@ public class RecyclerSiwpeItemFragment extends BaseFragment {
                 str = "没有侧边菜单";
                 swipeModel = SideSlipLayout.SwipeModel.NONE;
             }
-            strings.add(new ItemData(swipeModel, str + "  " + i, i % 3 == 0 ? 2 : 1));
+            strings.add(new ItemData(swipeModel, str + "  " + i, i % 3 == 0 ? 1 : 0));
         }
         return strings;
     }
 
-    private static class ItemData {
+    public static class ItemData {
         @SideSlipLayout.SwipeModel
         private int swipeModel;
         private String name;
-        private int menuLayoutResCode;// 1 default  2 cus
+        @LayoutRes
+        private int menuLayoutResCode;// 0 default  1 cus
 
         ItemData(int swipeModel, String name, int menuLayoutResCode) {
             this.swipeModel = swipeModel;
@@ -138,14 +144,41 @@ public class RecyclerSiwpeItemFragment extends BaseFragment {
             this.menuLayoutResCode = menuLayoutResCode;
         }
 
-        private static int getCodeByModelAndMenuRes(@SideSlipLayout.SwipeModel int model, int menuLayoutResCode) {
-            return model * 10 + menuLayoutResCode;
+        public int getSwipeModel() {
+            return swipeModel;
         }
 
+        public void setSwipeModel(int swipeModel) {
+            this.swipeModel = swipeModel;
+        }
 
-        private static int[] getModelAndMenuResByCode(int code) {
-            int res = code % 10 == 2 ? R.layout.item_swipe_menu_delete_collect : R.layout.item_swipe_menu_delete;
-            return new int[]{code / 10, res};
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getMenuLayoutResCode() {
+            return menuLayoutResCode;
+        }
+
+        public void setMenuLayoutResCode(int menuLayoutResCode) {
+            this.menuLayoutResCode = menuLayoutResCode;
+        }
+
+        public int getCodeByModelAndMenuRes() {
+            return swipeModel * 10 + menuLayoutResCode;
+        }
+
+        public static ItemData createByCode(int code) {
+            return new ItemData(code / 10, "", code % 2);
+        }
+
+        @LayoutRes
+        public int getLayoutResByResCode() {
+            return menuLayoutResCode == 1 ? R.layout.item_swipe_menu_delete_collect : R.layout.item_swipe_menu_delete;
         }
     }
 }
