@@ -29,10 +29,12 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
+import javax.tools.Diagnostic;
 
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -41,6 +43,24 @@ import static javax.lang.model.element.Modifier.STATIC;
  * $L: 直接使用 android.support.v4.app.ActivityCompat.startActivity()
  * $T: 导入后再使用 import android.support.v4.app.ActivityCompat;  ActivityCompat.startActivity();
  * $S: 字符串，对于丢如内容强制加上引用符号， "content"
+ */
+/*
+ * Element 介绍
+ *
+ * package com.example; // PackageElement
+ *
+ * public class Foo { // TypeElement private
+ *
+ *      int a; // VariableElement
+ *
+ *      private Foo other; // VariableElement
+ *
+ *      public Foo () {} // ExecuteableElement
+ *
+ *      public void setA ( // ExecuteableElement
+ *          int newA // TypeElement ) {
+ *      }
+ * }
  */
 /* 自动生成 javax.annotation.processing.IProcessor 文件 */
 @AutoService(Processor.class)
@@ -220,7 +240,15 @@ public class RouterProcessor extends AbstractProcessor {
 
         // 1. 遍历被注释的类，有除重处理
         List<ClassName> classPathCache = new ArrayList<>();
+        // 1.1. 遍历标注 @ApiRepository 的元素(类、方法、变量等)，筛选出class标注
         for (TypeElement element : ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Router.class))) {
+            // 标注 @Router 不是class，报错
+            if (element.getKind() != ElementKind.CLASS) {
+                mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        String.format("Only classes can be annotated with @%s", Router.class.getSimpleName()),
+                        element);
+                continue;
+            }
             ClassName className = ClassName.get(element);
             // 重复判断
             if (classPathCache.contains(className)) {
@@ -230,15 +258,25 @@ public class RouterProcessor extends AbstractProcessor {
 
             blockBuilderGo.add("case $S: \n", className.toString());//1
 
-            // 检查是否有转场动画
+            // 检查是否有转场动画，字段标注
             Element sceneTransitionElement = null;
             String sceneTransitionName = null;
+            // 遍历标注 @ApiRepository 的元素(类、方法、变量等)，之前已过滤非class标注
             for (Element childElement : element.getEnclosedElements()) {
                 SceneTransition mSceneTransitionAnnotation = childElement.getAnnotation(SceneTransition.class);
-                if (mSceneTransitionAnnotation != null) {
-                    sceneTransitionElement = childElement;
-                    sceneTransitionName = mSceneTransitionAnnotation.value();
+                // 没有标注 @SceneTransition 的字段，跳过
+                if (mSceneTransitionAnnotation == null) {
+                    continue;
                 }
+                // 在标注 @Router 的class中，标注 @SceneTransition 不是字段的话，报错
+                if (childElement.getKind() != ElementKind.FIELD) {
+                    mMessager.printMessage(Diagnostic.Kind.ERROR,
+                            String.format("Only field can be annotated with @%s", Router.class.getSimpleName()),
+                            element);
+                    continue;
+                }
+                sceneTransitionElement = childElement;
+                sceneTransitionName = mSceneTransitionAnnotation.value();
             }
 
             // 有转场动画
@@ -290,6 +328,13 @@ public class RouterProcessor extends AbstractProcessor {
         // 1. 遍历被注释的类，有除重处理
         List<String> classNameCache = new ArrayList<>();
         for (TypeElement element : ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Router.class))) {
+            // 标注 @Router 不是class，跳过
+            if (element.getKind() != ElementKind.CLASS) {
+                mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        String.format("Only classes can be annotated with @%s", Router.class.getSimpleName()),
+                        element);
+                continue;
+            }
             String className = ClassName.get(element).toString();
             // 重复判断
             if (classNameCache.contains(className)) {
@@ -300,12 +345,22 @@ public class RouterProcessor extends AbstractProcessor {
             // 检查是否有传递参数
             List<Element> mExtraElements = new ArrayList<>();
             List<String> mExtraElementKeys = new ArrayList<>();
+            // 遍历标注 @ApiRepository 的元素(类、方法、变量等)，之前已过滤非class标注
             for (Element childElement : element.getEnclosedElements()) {
                 Extra mExtraAnnotation = childElement.getAnnotation(Extra.class);
-                if (mExtraAnnotation != null) {
-                    mExtraElementKeys.add(mExtraAnnotation.value());
-                    mExtraElements.add(childElement);
+                // 没有标注 @Extra 的字段，跳过
+                if (mExtraAnnotation == null) {
+                    continue;
                 }
+                // 在标注 @Router 的class中，标注 @Extra 不是字段的话，跳过
+                if (childElement.getKind() != ElementKind.FIELD) {
+                    mMessager.printMessage(Diagnostic.Kind.ERROR,
+                            String.format("Only field can be annotated with @%s", Router.class.getSimpleName()),
+                            element);
+                    continue;
+                }
+                mExtraElementKeys.add(mExtraAnnotation.value());
+                mExtraElements.add(childElement);
             }
 
             blockBuilderBind.add("case $S: \n", className);//1

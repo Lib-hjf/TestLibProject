@@ -7,10 +7,10 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import org.hjf.annotation.apt.ApiRepository;
-import org.hjf.annotation.apt.InstanceFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,15 +28,19 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 
+import retrofit2.http.Path;
+
 import static javax.lang.model.element.Modifier.PUBLIC;
-import static javax.lang.model.element.Modifier.STATIC;
 
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -45,6 +49,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 })
 public class ApiRepositoryProcessor extends AbstractProcessor {
 
+    private static final String IMPL_INSTANCE_NAME = "service";
     private Filer mFiler;
     private Messager mMessager;
 
@@ -72,6 +77,13 @@ public class ApiRepositoryProcessor extends AbstractProcessor {
         List<ClassName> classPathCache = new ArrayList<>();
         for (TypeElement element : ElementFilter.typesIn(roundEnvironment.getElementsAnnotatedWith(ApiRepository.class))) {
             mMessager.printMessage(Diagnostic.Kind.NOTE, "正在处理" + element.toString());
+            // 标注 @ApiRepository 不是 interface，报错
+            if (element.getKind() != ElementKind.INTERFACE) {
+                mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        String.format("Only classes can be annotated with @%s", ApiRepository.class.getSimpleName()),
+                        element);
+                continue;
+            }
             ClassName className = ClassName.get(element);
             // 重复判断
             if (classPathCache.contains(className)) {
@@ -116,8 +128,8 @@ public class ApiRepositoryProcessor extends AbstractProcessor {
     }
 
     //  生成接口实现类
-    private static TypeSpec.Builder getImplementClassTypeSpecBuilder(TypeElement typeElement) {
-        ClassName className = ClassName.get(typeElement);
+    private static TypeSpec.Builder getImplementClassTypeSpecBuilder(TypeElement interfaceElement) {
+        ClassName className = ClassName.get(interfaceElement);
         ClassName implClassName = getInterfaceImplementClassName(className);
         // 1. 实现类声明
         TypeSpec.Builder tb = TypeSpec.classBuilder(implClassName)
@@ -126,7 +138,7 @@ public class ApiRepositoryProcessor extends AbstractProcessor {
                 .addJavadoc("此类是接口 {@link $T} 接口的实现类\n", className);
 
         // 2. 申明变量字段： 实现类的对象
-        tb.addField(FieldSpec.builder(className, "service")
+        tb.addField(FieldSpec.builder(className, IMPL_INSTANCE_NAME)
                 .addJavadoc("@此字段 此类由 {@link $L} 自动生成\n", ApiRepositoryProcessor.class.getName())
                 .addModifiers(Modifier.PRIVATE)
                 .build());
@@ -135,49 +147,81 @@ public class ApiRepositoryProcessor extends AbstractProcessor {
         tb.addMethod(MethodSpec.constructorBuilder()
                 .addJavadoc("@构造方法 此类由 {@link $L} 自动生成\n", ApiRepositoryProcessor.class.getName())
                 .addParameter(className, "service")
-                .addCode(CodeBlock.builder().addStatement("this.service = service").build())
+                .addCode(CodeBlock.builder().addStatement("this." + IMPL_INSTANCE_NAME + " = service").build())
                 .build());
 
-        // 4. 实现接口标记的方法
-        /**
-         * TODO 先弄懂 retrofit 的参数注解
-         *  FIXME 修改实现方式
+        /*
+         * 4. 遍历标注 @ApiRepository 的元素(类、方法、变量等)，之前已过滤非class标注
          *  -   1. @Path - 从 params 中找
          *  -   2. @
          */
-        for (Element element : typeElement.getEnclosedElements()) {
-            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(element.getSimpleName().toString())
-                    .addJavadoc("@此方法 此类由 {@link $L} 自动生成\n", ApiRepositoryProcessor.class.getName())
-                    .returns(ClassName.get("okhttp3", "Call"))
-                    .addModifiers(PUBLIC, STATIC);
+        for (Element element : interfaceElement.getEnclosedElements()) {
 
-            // 参数处理
-            ExecutableElement executableElement = (ExecutableElement) element;
-            for (int i = 0; i < executableElement.getParameters().size(); i++) {
-                VariableElement vep = executableElement.getParameters().get(i);
-                // TODO 如果含有普通参数注解，自动从 HashMap 中取
-//                methodBuilder.addParameter(ParameterizedTypeName
-//                        .get(HashMap.class, String.class, String.class), "params");
-                // 普通参数：String，int
-                switch (vep.getSimpleName().toString()) {
-                    case "include":
-                        break;
-                    case "where":
-                        break;
-                    case "skip":
-                        break;
-                    case "limit":
-                        break;
-                    case "order":
-                        break;
-                }
-
+            // 4.1 不是方法就跳过
+            if (element.getKind() != ElementKind.METHOD) {
+                continue;
             }
-        }
 
+            ExecutableElement methodElement = (ExecutableElement) element;
+            // 4.2 返回值不是 okhttp3.Call 的方法，跳过
+            TypeMirror returnType = methodElement.getReturnType();
+            if (!"okhttp3.Call".equals(TypeName.get(returnType).toString())) {
+                continue;
+            }
+
+            // 4.3 申明方法和返回值
+            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(element.getSimpleName().toString())
+                    .addJavadoc("@此方法由 {@link $L} 自动生成\n", ApiRepositoryProcessor.class.getName())
+                    .returns(ClassName.get("okhttp3", "Call"))
+//                    .returns(TypeVariableName.get(TypeName.get(returnType).toString()))
+                    .addModifiers(PUBLIC);
+
+            // 4.4  获取方法所有注解，并处理
+            //      支持多个注解
+            //      TODO 处理 @Headers @POST @PUT @GET   实战时考虑
+            // methodElement.getAnnotation(GET.class)
+
+            // 4.5  遍历所有参数，并处理参数注解
+            //      目前只支持参数有一个注解，按顺序排优先度
+            boolean hasAddedParameter4HashMap = false;
+            final StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("return ")
+                    .append(IMPL_INSTANCE_NAME).append(".")
+                    .append(element.getSimpleName().toString()).append("(");
+            for (VariableElement variableElement : methodElement.getParameters()) {
+                // 处理 @Path
+                Path path = variableElement.getAnnotation(Path.class);
+                if (path != null) {
+                    // 添加通用参数  HashMap<String,String>
+                    if (!hasAddedParameter4HashMap) {
+                        hasAddedParameter4HashMap = true;
+                        methodBuilder.addParameter(ParameterizedTypeName
+                                .get(HashMap.class, String.class, String.class), "params");
+                    }
+                    // variableElement.getSimpleName()  参数名
+                    // variableElement.asType() 参数类型
+                    // path.value() @Path("value") 中的value
+                    ApiRepositoryProcessor.getString4BaseData(stringBuilder, variableElement, path);
+                    continue;
+                }
+                // TODO 处理 @Query @Body 实战时考虑
+
+                // other : no annotation or other annotation
+                methodBuilder.addParameter(TypeName.get(variableElement.asType()), variableElement.getSimpleName().toString());
+                stringBuilder.append(variableElement.getSimpleName().toString()).append(", ");
+            }
+            stringBuilder.setLength(stringBuilder.length() - 2); // 去掉最后的 ', ' 符号
+            stringBuilder.append(")");
+            // 4.6 调用 retrofit2.create(service) 生成的对象相应方法
+            methodBuilder.addCode(CodeBlock.builder().addStatement(stringBuilder.toString()).build());
+
+            // 添加方法
+            tb.addMethod(methodBuilder.build());
+        }
         return tb;
     }
 
+    // get init method block
     private static CodeBlock getBlock4init(List<ClassName> classPathCache) {
         CodeBlock.Builder blockBuilder = CodeBlock.builder();
         for (ClassName className : classPathCache) {
@@ -187,32 +231,30 @@ public class ApiRepositoryProcessor extends AbstractProcessor {
         return blockBuilder.build();
     }
 
+    // get class name for interface with annotation @ApiRepository
     private static ClassName getInterfaceImplementClassName(ClassName className) {
         return ClassName.get(RouterProcessor.PACKAGE_NAME, className.simpleName() + "Impl");
     }
 
-    private CodeBlock getBlock(RoundEnvironment roundEnvironment) {
-        CodeBlock.Builder blockBuilder = CodeBlock.builder();
-
-        // switch
-        blockBuilder.addStatement("String classPath = clazz.getName()");
-        blockBuilder.beginControlFlow("switch (classPath)");
-
-        // case ...
-        ArrayList<ClassName> classNameCache = new ArrayList<>();
-        for (TypeElement element : ElementFilter.typesIn(roundEnvironment.getElementsAnnotatedWith(InstanceFactory.class))) {
-            ClassName className = ClassName.get(element);
-            if (classNameCache.contains(className)) {
-                continue;
-            }
-            classNameCache.add(className);
-
-            blockBuilder.addStatement("case $S: return (T) new $T() ", className.toString(), className);
+    // string -> BaseData
+    private static void getString4BaseData(final StringBuilder stringBuilder, VariableElement variableElement, Path path) {
+        // long
+        if (variableElement.asType().getKind() == TypeKind.LONG) {
+            stringBuilder.append("Long.parseLong(");
         }
-
-        // default
-        blockBuilder.addStatement("default: return (T) clazz.newInstance()");
-        blockBuilder.endControlFlow();
-        return blockBuilder.build();
+        // int
+        else if (variableElement.asType().getKind() == TypeKind.INT) {
+            stringBuilder.append("Integer.parseInt(");
+        }
+        // short
+        else if (variableElement.asType().getKind() == TypeKind.SHORT) {
+            stringBuilder.append("Short.parseShort(");
+        }
+        // string
+        else {
+            stringBuilder.append("(");
+        }
+        stringBuilder.append("params.get(\"").append(path.value()).append("\")");
+        stringBuilder.append("), ");
     }
 }

@@ -12,7 +12,11 @@ import retrofit2.http.Path;
 @ApiRepository()
 public interface ApiService {
 
+    String namename = "212";
+
     @GET("login/{userName}/{userPWD}")
     Call login(@Path("userName") String userName, @Path("userPWD") String password);
 
+    @GET("login/{userName}/{userPWD}")
+    Call login2(@Path("userName") long userName, @Path("userPWD") int password, byte[] bytes);
 }

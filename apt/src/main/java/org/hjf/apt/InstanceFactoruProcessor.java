@@ -16,15 +16,18 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
+import javax.tools.Diagnostic;
 
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -34,11 +37,13 @@ import javax.lang.model.util.ElementFilter;
 public class InstanceFactoruProcessor extends AbstractProcessor {
 
     private Filer mFiler;
+    private Messager mMessager;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         mFiler = processingEnv.getFiler();
+        mMessager = processingEnv.getMessager();
     }
 
 
@@ -82,6 +87,13 @@ public class InstanceFactoruProcessor extends AbstractProcessor {
         // case ...
         ArrayList<ClassName> classNameCache = new ArrayList<>();
         for (TypeElement element : ElementFilter.typesIn(roundEnvironment.getElementsAnnotatedWith(InstanceFactory.class))) {
+            // 标注 @InstanceFactory 不是class，报错
+            if (element.getKind() != ElementKind.CLASS) {
+                mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        String.format("Only classes can be annotated with @%s", InstanceFactory.class.getSimpleName()),
+                        element);
+                continue;
+            }
             ClassName className = ClassName.get(element);
             if (classNameCache.contains(className)) {
                 continue;

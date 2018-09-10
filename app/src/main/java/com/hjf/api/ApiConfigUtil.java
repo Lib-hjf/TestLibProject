@@ -12,10 +12,13 @@ import org.hjf.util.NetworkUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.CacheControl;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -44,35 +47,29 @@ public class ApiConfigUtil {
     private static final SparseArray<String> hostCacheArray = new SparseArray<>();
     private static Retrofit retrofit;
 
-/* TODO
-    private static class SingletonHolder {
-        private static final ApiConfigUtil INSTANCE = new ApiConfigUtil();
-    }
-
-    public static ApiConfigUtil getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
-*/
-
     /**
-     * init api
+     * init api repository
+     *
+     * step 1. get host array for {@link HostInterceptor}
+     * -    switch retrofit base url at runtime.
+     * step 2. get retrofit object for create All Api Service with annotation {@link org.hjf.annotation.apt.ApiRepository}
      */
     public static void init() {
         hostCacheArray.put(HOST_Query_Host, "http://www.a371369.cn/");
         ApiRepository.init(retrofit = getRetrofit());
+        ApiRepository.ApiServiceImpl.login(new HashMap<String, String>()).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
     }
 
-
-    /**
-     * step 1. get host array for {@link HostInterceptor}
-     * switch retrofit base url at runtime.
-     */
-
-    /**
-     * step 2. get retrofit object for create All Api Service with annotation {@link org.hjf.annotation.apt.ApiRepository}
-     *
-     * @return retrofit
-     */
     private static Retrofit getRetrofit() {
         // 1. config ok http
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -104,7 +101,7 @@ public class ApiConfigUtil {
         // 3. config retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
-                // TODO converter
+                // TODO custom converter
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 // Not to set base url, use HostInterceptor switch base url at runtime.
                 // .baseUrl("host")
@@ -113,7 +110,7 @@ public class ApiConfigUtil {
         return retrofit;
     }
 
-
+    // TODO 缓存检查
     private static final class HttpCacheInterceptor implements Interceptor {
 
         @Override
