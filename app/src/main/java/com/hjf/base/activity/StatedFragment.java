@@ -39,6 +39,9 @@ import org.hjf.log.LogUtil;
  * 第二次旋转屏幕：onSaveInstanceState() 被调用，由于第一次旋转时View被销毁。再次进行保存操作时肯定 NULLPoint 空指针异常
  * 				  所以别再 Fragment 中处理 View 的状态保存和恢复，这不安全也不符合 android 的设计
  */
+/**
+ * 此类不提供使用，仅作为知识点存放
+ */
 @Deprecated
 public abstract class StatedFragment extends BaseFragment {
 

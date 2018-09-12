@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.CacheControl;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -57,17 +55,6 @@ public class ApiConfigUtil {
     public static void init() {
         hostCacheArray.put(HOST_Query_Host, "http://www.a371369.cn/");
         ApiRepository.init(retrofit = getRetrofit());
-        ApiRepository.ApiServiceImpl.login(new HashMap<String, String>()).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-            }
-        });
     }
 
     private static Retrofit getRetrofit() {
@@ -145,6 +132,7 @@ public class ApiConfigUtil {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
+
             ApiConfigUtil.hostCacheArray.get(0);
             return null;
         }

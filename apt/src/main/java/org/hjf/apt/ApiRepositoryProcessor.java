@@ -163,17 +163,18 @@ public class ApiRepositoryProcessor extends AbstractProcessor {
             }
 
             ExecutableElement methodElement = (ExecutableElement) element;
-            // 4.2 返回值不是 okhttp3.Call 的方法，跳过
+            // 4.2 返回值不是 retrofit2.Call 的方法，跳过
             TypeMirror returnType = methodElement.getReturnType();
-            if (!"okhttp3.Call".equals(TypeName.get(returnType).toString())) {
+            TypeName returnTypeName = TypeName.get(returnType);
+            if (!returnTypeName.toString().startsWith("retrofit2.Call") &&
+                    !returnTypeName.toString().equals("okhttp3.Call")) {
                 continue;
             }
 
             // 4.3 申明方法和返回值
             MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(element.getSimpleName().toString())
                     .addJavadoc("@此方法由 {@link $L} 自动生成\n", ApiRepositoryProcessor.class.getName())
-                    .returns(ClassName.get("okhttp3", "Call"))
-//                    .returns(TypeVariableName.get(TypeName.get(returnType).toString()))
+                    .returns(returnTypeName)
                     .addModifiers(PUBLIC);
 
             // 4.4  获取方法所有注解，并处理
@@ -237,7 +238,8 @@ public class ApiRepositoryProcessor extends AbstractProcessor {
     }
 
     // string -> BaseData
-    private static void getString4BaseData(final StringBuilder stringBuilder, VariableElement variableElement, Path path) {
+    private static void getString4BaseData(final StringBuilder stringBuilder, VariableElement
+            variableElement, Path path) {
         // long
         if (variableElement.asType().getKind() == TypeKind.LONG) {
             stringBuilder.append("Long.parseLong(");

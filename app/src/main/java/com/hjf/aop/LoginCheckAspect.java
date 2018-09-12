@@ -1,6 +1,5 @@
 package com.hjf.aop;
 
-import com.hjf.test.R;
 import com.hjf.util.NotifyUtil;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,9 +9,6 @@ import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
 public class LoginCheckAspect {
-
-    private static final int TIME_TAG = R.id.click_time;
-    private static final int CLICK_DELAY_TIME_MILLIS = 2000;
 
     // 方法切入点，使用正则表达式指定
     @Pointcut("execution(@org.hjf.annotation.aspect.LoginCheck * *(..))")

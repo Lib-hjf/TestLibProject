@@ -1,9 +1,15 @@
 package com.hjf.api;
 
+import com.hjf.model.UserInfo;
+
 import org.hjf.annotation.apt.ApiRepository;
 
-import okhttp3.Call;
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -12,11 +18,12 @@ import retrofit2.http.Path;
 @ApiRepository()
 public interface ApiService {
 
-    String namename = "212";
-
     @GET("login/{userName}/{userPWD}")
     Call login(@Path("userName") String userName, @Path("userPWD") String password);
 
     @GET("login/{userName}/{userPWD}")
-    Call login2(@Path("userName") long userName, @Path("userPWD") int password, byte[] bytes);
+    okhttp3.Call login2(@Path("userName") long userName, @Path("userPWD") int password, byte[] bytes);
+
+    @POST("dadd")
+    Call<UserInfo> playMusic(@Body HashMap<String, String> param);
 }

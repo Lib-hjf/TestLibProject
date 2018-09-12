@@ -1,5 +1,6 @@
 package org.hjf.plugin
-
+// plugin lib 不是 java的，所以包名可以和文件路径名不同
+// 注意包名，后续在 /app/build.gradle 中 apply plugin: '此包名'
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
@@ -16,7 +17,7 @@ public class AspectjPlugin implements Plugin<Project> {
 
     void apply(Project project) {
         project.dependencies {
-            compile 'org.aspectj:aspectjrt:1.9.1'
+            api 'org.aspectj:aspectjrt:1.9.1'
         }
         final def log = project.logger
         log.error "========================";
